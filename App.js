@@ -44,12 +44,12 @@ const App=()=>{
         </Stack.Screen>
         <Stack.Screen name="Store" component={Store} options={{
           headerStyle:{
-            backgroundColor:"#7868E6"
+            backgroundColor:"#5EDFFF"
           },
-          title:'Lexicon Master',
+          title:'My Dictionary',
           headerTitleStyle:{
-            textAlign:"center",
-            color:"#EDEEF7"
+            
+            color:"#393B44"
           }
         }}>
         

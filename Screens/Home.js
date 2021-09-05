@@ -2,7 +2,8 @@ import React,{useState,useEffect} from "react";
 
 import {StyleSheet,View,StatusBar,ScrollView} from 'react-native'
 import SnackBar from 'react-native-snackbar-component'
-import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-community/async-storage';
+import Snackbar from 'react-native-snackbar'
 import {Fab,
     Text,
     Icon,
@@ -23,9 +24,11 @@ import {Fab,
 import IconAntDesign  from 'react-native-vector-icons/FontAwesome5'
 import Axios from 'axios';
 import { set } from "react-native-reanimated";
-const Home = ()=>{
+const Home = ({navigation,route})=>{
    const [details,setDetails] =useState([{word:'' }])
    const [flag,setFlag]=useState(0)
+   const [myDict,setMyDictionary]=useState([])
+
    
    const newWord=async ()=>{
        try{
@@ -45,6 +48,58 @@ const Home = ()=>{
            console.log(error)
            
        }
+   }
+
+   const addToDictionary= async ()=>{
+
+    try{
+        const myWord={
+            word:details[0].word,
+            definition:details[0].definition,
+            pronunciation:details[0].pronunciation
+        }
+        console.log(myDict)
+        if(myDict.includes(myWord)){
+            return Snackbar.show({text:"Already added",backgroundColor:"#FF4848",textColor:"#FFF7AE"})
+        }
+        else{
+            
+            
+            
+    
+        const StoredVal= await AsyncStorage.getItem("@myDictionary")
+    
+        const PrevList= JSON.parse(StoredVal)
+        
+                console.log(PrevList)
+        if(PrevList){
+            console.log("sai")
+            PrevList.push(myWord)
+            await AsyncStorage.setItem("@myDictionary",JSON.stringify(PrevList))
+        }
+        
+        else{
+                const newWord=[myWord]
+              
+                
+                await AsyncStorage.setItem('@season_list', JSON.stringify(newWord))
+            }
+            myDict.push(myWord)
+            setMyDictionary(myDict)
+        
+            return Snackbar.show({text:"Saved to your book",backgroundColor:"#71EFA3",textColor:"#5F939A"})
+    
+        }
+        
+
+    }
+    catch(error){
+        console.log(error)
+    }
+   
+        
+
+
    }
    useEffect(()=>{
     newWord();
@@ -94,13 +149,13 @@ const Home = ()=>{
              <Text style={{marginLeft:15,fontSize:20,color:"#4B6587",fontFamily:"FredokaOne-Regular"}}>{details[0].pronunciation}</Text>
              </View>
              <View style={{display: "flex",flexDirection: "row",justifyContent:"center",marginTop:40}}>
-                <Button  rounded style={{backgroundColor:"#80ED99",paddingHorizontal:25}} >
+                <Button  rounded style={{backgroundColor:"#80ED99",paddingHorizontal:25}} onPress={addToDictionary} >
                         <Text style={{color:"#012443"}}>Save</Text>
                 </Button>
             </View> 
 
              <View style={styles.bottomView}>
-                  <Button rounded style={{marginRight:10,backgroundColor:"#035397",paddingHorizontal:15}}>
+                  <Button rounded style={{marginRight:10,backgroundColor:"#035397",paddingHorizontal:15}} onPress={()=> navigation.navigate('Store')}>
                        <Text>My Book</Text>
                   </Button>
                   <Button rounded style={{marginRight:10,backgroundColor:"#5EDFFF",paddingHorizontal:15}} onPress={newWord}>
