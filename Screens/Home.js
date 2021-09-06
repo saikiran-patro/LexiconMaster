@@ -30,7 +30,7 @@ const Home = ({navigation,route})=>{
    const [details,setDetails] =useState([{word:'' }])
    const [flag,setFlag]=useState(0)
    const [myDict,setMyDictionary]=useState([])
-
+   
    
    const newWord=async ()=>{
        try{
@@ -127,12 +127,12 @@ const Home = ({navigation,route})=>{
 
     if(flag){
 
-        console.log(flag);
+        
         return(
 
-        <View  style={styles.container}>
+        <View  style={{backgroundColor:"#ECFCFF",display:"flex",justifyContent:'center',alignItems: "center",flex:1}}>
             <StatusBar backgroundColor={"#5EDFFF"}/>
-            <Container style={styles.container}>
+            <Container style={{backgroundColor:"#ECFCFF",display:"flex",justifyContent:'center',alignItems: "center",flex:1}}>
       
                 <Spinner  color="#5EDFFF" accessibilityLabel="Loading posts" />
                 <Button rounded onPress={newWord} style={{backgroundColor:"#5EDFFF",paddingHorizontal:30,paddingVertical:15}}><Text style={{color:"#393B44"}}>Reload App</Text></Button>
@@ -155,20 +155,20 @@ const Home = ({navigation,route})=>{
              <Text style={{fontSize:35,color:"#393B44",marginTop:15,marginBottom:25,fontFamily:"BebasNeue-Regular"}}>Your New Word for the day</Text>
              
              
-             <Text style={{fontSize:30,color:"#1E3163",marginBottom:30,fontFamily:"FredokaOne-Regular"}}>{details[0].word}</Text>
+             <Text style={{fontSize:30,color:"#1E3163",marginBottom:30,fontFamily:"FredokaOne-Regular",marginTop:30}}>{details[0].word}</Text>
              </View>
              <View style={styles.mainView}>
-             <Icon active name="book-open" type="Feather" color="#7868E6"></Icon>
+             <Icon active name="book-open" type="Feather" style={{marginLeft:10}}></Icon>
              <Text style={{marginLeft:15,fontSize:22,fontWeight:"bold"}}>Definition:</Text>
              </View>
-             <Text style={{marginLeft:25,fontSize:19,color:"#4B6587",fontFamily:"FredokaOne-Regular",marginTop:15}}>{details[0].definition}</Text>
+             <Text style={{marginLeft:43,fontSize:19,color:"#4B6587",fontFamily:"FredokaOne-Regular",marginTop:15}}>{details[0].definition}</Text>
              
              <View style={styles.mainView}>
-             <Icon active name="microphone-alt" type="FontAwesome5" color="#7868E6"></Icon>
+             <Icon active name="microphone-alt" type="FontAwesome5"  style={{marginLeft:10}}></Icon>
              <Text style={{marginLeft:15,fontSize:22,fontWeight:"bold"}}>Pronunciation:</Text>
              <Text style={{marginLeft:15,fontSize:20,color:"#4B6587",fontFamily:"FredokaOne-Regular"}}>{details[0].pronunciation}</Text>
              </View>
-             <View style={{display: "flex",flexDirection: "row",justifyContent:"center",marginTop:40}}>
+             <View style={{display: "flex",flexDirection: "row",justifyContent:"center",marginTop:165}}>
                 <Button  rounded style={{backgroundColor:"#80ED99",paddingHorizontal:25}} onPress={addToDictionary} >
                         <Text style={{color:"#012443"}}>Save</Text>
                 </Button>
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
 
     },
     mainView:{
-        marginTop:20,
+        marginTop:30,
         display: "flex",
         flexDirection: "row",
         flexWrap:"wrap"
@@ -218,7 +218,8 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         justifyContent:"center",
-        marginTop:40
+        marginTop:40,
+        marginBottom:20
 
     }
     

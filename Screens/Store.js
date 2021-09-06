@@ -19,7 +19,7 @@ import {Fab,
     Title,
     H1,
     H3,
-    H5,
+    H2,
     Subtitle,
     Container,
     Spinner,
@@ -27,6 +27,16 @@ import {Fab,
 const Store = ()=>{
     const [mybook,SetmyBook]=useState([])
     const isFocused=useIsFocused()
+    const colors= ["#B2FCFF","#F5CEBE","#B8B5FF","#F2A07B","#DEEDF0","#FFF76A","#DDFFBC","#98DED9","#FFBCBC","#FCECDD","#B9FFFC"]
+    const deleteWord= async (id)=>{
+        //
+       const newList= mybook.filter((Word)=>{
+         return Word.id !== id;
+   
+        })
+        await AsyncStorage.setItem('@myDictionary', JSON.stringify(newList))
+        SetmyBook(newList)
+      }
     const getDictionary= async ()=>{
         const StoredVal= await AsyncStorage.getItem('@myDictionary')
         const PrevList= await JSON.parse(StoredVal)
@@ -58,27 +68,39 @@ const Store = ()=>{
         ):(
             
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <H3>Your Dictionary</H3>
+                  
                 <List>
                     {
                         mybook.map((myWord)=>(
 
-                                <View key={myWord.id} style={styles.wordView}>
+                                <View key={myWord.id} style={{backgroundColor:colors[Math.floor(Math.random()*colors.length)],paddingVertical:40,margin:10,borderRadius:15}}>
                                     <ListItem >
-                                        <Left>
-                                            <Button danger  >
-                                                <Icon active name="trash" type="Entypo" ></Icon>
-                                            </Button>
-                                        
-                                        
-                                        
-                                        </Left>
                                         <Body>
-
-                                            <H3>{myWord.word}</H3>
-                                            <Text>{myWord.definition}</Text>
-                                            <Text>{myWord.pronunciation}</Text>
+                                            <View style={{alignItems: "center"}}>
+                                            <Text style={{fontSize:23,color:"#1E3163",marginBottom:15,fontFamily:"FredokaOne-Regular"}}>{myWord.word}</Text>
+                                            </View>
                                             
+                                            <View style={styles.mainView}>
+                                                <Icon style={{fontSize: 25, color: "#314E52"}} name="book-open" type="Feather" ></Icon>
+                                                <Text style={{marginLeft:14,fontSize:18,fontWeight:"bold"}}>Definition:</Text>
+                                            </View>
+                                            <Text style={{marginLeft:35,fontSize:18,color:"#162447",fontFamily:"FredokaOne-Regular",marginTop:12,marginBottom:10}}>{myWord.definition}</Text>
+             
+                                            <View style={styles.mainView}>
+                                                <Icon active name="microphone-alt" type="FontAwesome5" style={{fontSize: 25, color: "#314E52"}}></Icon>
+                                                <Text style={{marginLeft:15,fontSize:18,fontWeight:"bold"}}>Pronunciation:</Text>
+                                                <Text style={{marginLeft:15,fontSize:18,color:"#162447",fontFamily:"FredokaOne-Regular"}}>{myWord.pronunciation}</Text>
+                                            </View>
+             
+                                            <View style={{display:"flex",marginTop:20}}>
+                                               <Button rounded size="xs" style={{backgroundColor:"#C72C41"}} onPress={()=>deleteWord(myWord.id)}>
+                                                    <Icon active name="trash" type="FontAwesome5" style={{fontSize: 25, color: "#EEEEEE"}}></Icon> 
+                                                    <Text >Delete</Text>                                      
+        
+                                               </Button>
+                                            
+                                            
+                                            </View>
                                         
                                         
                                         </Body>
@@ -129,8 +151,13 @@ const styles = StyleSheet.create({
         flexGrow:1,
         backgroundColor:"#ECFCFF"
     },
-    wordView:{
-        backgroundColor:"#A2DBFA",
-        paddingVertical:40
+    
+    mainView:{
+        marginTop:5,
+        display: "flex",
+        flexDirection: "row",
+        flexWrap:"wrap"
+
+
     }
 })
