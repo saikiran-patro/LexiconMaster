@@ -4,6 +4,7 @@ import {StyleSheet,View,StatusBar,ScrollView} from 'react-native'
 import SnackBar from 'react-native-snackbar-component'
 import AsyncStorage from '@react-native-community/async-storage';
 import Snackbar from 'react-native-snackbar'
+
 import {Fab,
     Text,
     Icon,
@@ -24,6 +25,7 @@ import {Fab,
 import IconAntDesign  from 'react-native-vector-icons/FontAwesome5'
 import Axios from 'axios';
 import { set } from "react-native-reanimated";
+import Shortid from "shortid";
 const Home = ({navigation,route})=>{
    const [details,setDetails] =useState([{word:'' }])
    const [flag,setFlag]=useState(0)
@@ -49,52 +51,70 @@ const Home = ({navigation,route})=>{
            
        }
    }
+   const checkObj=(obj,list)=>{
+       if(list!==null){
+        for(let i=0;i<list.length;i++) {
+            
+            if(list[i].word==obj.word){
+                console.log('condition True');
+                return true
+            }
+        }
+
+       }
+
+    
+    return false;
+   }
 
    const addToDictionary= async ()=>{
 
     try{
         const myWord={
+            id:Shortid.generate(),
             word:details[0].word,
             definition:details[0].definition,
             pronunciation:details[0].pronunciation
         }
-        console.log(myDict)
-        if(myDict.includes(myWord)){
-            return Snackbar.show({text:"Already added",backgroundColor:"#FF4848",textColor:"#FFF7AE"})
-        }
-        else{
-            
-            
-            
     
         const StoredVal= await AsyncStorage.getItem("@myDictionary")
-    
-        const PrevList= JSON.parse(StoredVal)
+
         
-                console.log(PrevList)
-        if(PrevList){
-            console.log("sai")
+        const PrevList= await  JSON.parse(StoredVal)
+        console.log(PrevList)
+        if(checkObj(myWord,PrevList)){
+            return Snackbar.show({text:"Already added",backgroundColor:"#FF4848",textColor:"#FFF7AE"})
+        }
+        else{     
+             
+        
+ 
+           if(PrevList){
+            
             PrevList.push(myWord)
             await AsyncStorage.setItem("@myDictionary",JSON.stringify(PrevList))
-        }
+            
+              }
         
-        else{
+           else{
                 const newWord=[myWord]
-              
+               
                 
-                await AsyncStorage.setItem('@season_list', JSON.stringify(newWord))
-            }
-            myDict.push(myWord)
-            setMyDictionary(myDict)
+                await AsyncStorage.setItem('@myDictionary', JSON.stringify(newWord))
+               }
+           myDict.push(myWord)
+           setMyDictionary(myDict)
         
-            return Snackbar.show({text:"Saved to your book",backgroundColor:"#71EFA3",textColor:"#5F939A"})
+           return Snackbar.show({text:"Saved to your book",backgroundColor:"#71EFA3",textColor:"#5F939A"})
     
         }
         
 
     }
     catch(error){
-        console.log(error)
+
+        return Snackbar.show({text:"Disk Full, Please remove some words from your dictionary",backgroundColor:"#F05454",textColor:"#E8E8E8"})
+        
     }
    
         
@@ -156,7 +176,7 @@ const Home = ({navigation,route})=>{
 
              <View style={styles.bottomView}>
                   <Button rounded style={{marginRight:10,backgroundColor:"#035397",paddingHorizontal:15}} onPress={()=> navigation.navigate('Store')}>
-                       <Text>My Book</Text>
+                       <Text>My Dictionary</Text>
                   </Button>
                   <Button rounded style={{marginRight:10,backgroundColor:"#5EDFFF",paddingHorizontal:15}} onPress={newWord}>
                         <Text style={{color:"#394867"}}>New Word</Text>
