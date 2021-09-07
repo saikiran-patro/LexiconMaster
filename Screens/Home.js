@@ -30,8 +30,21 @@ const Home = ({navigation,route})=>{
    const [details,setDetails] =useState([{word:'' }])
    const [flag,setFlag]=useState(0)
    const [myDict,setMyDictionary]=useState([])
+   const [darkMode,setdarkMode]=useState(0)
+   const buttonMode=["#393E46","#ECFCFF","#16213E"]
+   const ToggleMode=()=>{
+       
+       if(darkMode===0){
+          
+        setdarkMode(1)
    
-   
+       }
+       else{
+        
+       
+           setdarkMode(0)
+       }
+       }
    const newWord=async ()=>{
        try{
             const {data}=await Axios.get('https://random-words-api.vercel.app/word');
@@ -105,7 +118,7 @@ const Home = ({navigation,route})=>{
            myDict.push(myWord)
            setMyDictionary(myDict)
         
-           return Snackbar.show({text:"Saved to your book",backgroundColor:"#71EFA3",textColor:"#5F939A"})
+           return Snackbar.show({text:"Saved to your dictionary",backgroundColor:"#71EFA3",textColor:"#5F939A"})
     
         }
         
@@ -130,7 +143,9 @@ const Home = ({navigation,route})=>{
         
         return(
 
-        <View  style={{backgroundColor:"#ECFCFF",display:"flex",justifyContent:'center',alignItems: "center",flex:1}}>
+        <View  style={{backgroundColor:()=>{darkMode===1?(
+             "#16213E"
+        ):("#ECFCFF")},display:"flex",justifyContent:'center',alignItems: "center",flex:1}}>
             <StatusBar backgroundColor={"#5EDFFF"}/>
             <Container style={{backgroundColor:"#ECFCFF",display:"flex",justifyContent:'center',alignItems: "center",flex:1}}>
       
@@ -146,10 +161,10 @@ const Home = ({navigation,route})=>{
     
         
     return (
-         
-
          <View style={styles.container}>
-         <ScrollView >
+            {darkMode===0?(
+                <View style={styles.container}>
+             <ScrollView >
             
              <View style={{alignItems: "center"}}>
              <Text style={{fontSize:35,color:"#393B44",marginTop:15,marginBottom:25,fontFamily:"BebasNeue-Regular"}}>Your New Word for the day</Text>
@@ -169,8 +184,23 @@ const Home = ({navigation,route})=>{
              <Text style={{marginLeft:15,fontSize:20,color:"#4B6587",fontFamily:"FredokaOne-Regular"}}>{details[0].pronunciation}</Text>
              </View>
              <View style={{display: "flex",flexDirection: "row",justifyContent:"center",marginTop:165}}>
-                <Button  rounded style={{backgroundColor:"#80ED99",paddingHorizontal:25}} onPress={addToDictionary} >
+                <Button  rounded style={{backgroundColor:"#80ED99",paddingHorizontal:25,marginRight:15}} onPress={addToDictionary} >
                         <Text style={{color:"#012443"}}>Save</Text>
+                </Button>
+                <Button  rounded style={{backgroundColor:buttonMode[darkMode],paddingHorizontal:25}} onPress={ToggleMode} >
+                        {darkMode===1?(
+                            <View style={{display: "flex",flexDirection:"row",}}>
+                            <Icon active name="light-down" type="Entypo" style={{color:"#012443",fontSize:20}}></Icon>
+                            <Text style={{color:"#012443"}}>LightMode</Text> 
+                            </View>):(
+                                
+                                <View style={{display: "flex",flexDirection:"row",}}>
+                                <Icon style={{color:"#EEEEEE",fontSize:20}} active name="ios-moon" type="Ionicons" ></Icon>
+                                <Text style={{color:"#EEEEEE"}}>DarkMode</Text>
+                                </View>
+                            )
+                            
+                        }
                 </Button>
             </View> 
 
@@ -188,7 +218,75 @@ const Home = ({navigation,route})=>{
     
          </ScrollView>
          </View>
-    )
+    
+            ):(
+                //#16213E
+
+                <View style={{backgroundColor:"#1B262C",flex:1}}>
+                  <ScrollView >
+            
+                    <View style={{alignItems: "center"}}>
+                    <Text style={{fontSize:35,color:"#EEEEEE",marginTop:15,marginBottom:25,fontFamily:"BebasNeue-Regular"}}>Your New Word for the day</Text>
+             
+             
+                    <Text style={{fontSize:30,color:"#D7E9F7",marginBottom:30,fontFamily:"FredokaOne-Regular",marginTop:30}}>{details[0].word}</Text>
+                    </View>
+             <View style={styles.mainView}>
+             <Icon active name="book-open" type="Feather" style={{marginLeft:10,color:"#EEEEEE"}}></Icon>
+             <Text style={{marginLeft:15,fontSize:22,fontWeight:"bold",color:"#EEEEEE"}}>Definition:</Text>
+             </View>
+             <Text style={{marginLeft:43,fontSize:19,color:"#CCF2F4",fontFamily:"FredokaOne-Regular",marginTop:15}}>{details[0].definition}</Text>
+             
+             <View style={styles.mainView}>
+             <Icon active name="microphone-alt" type="FontAwesome5"  style={{marginLeft:10,color:"#EEEEEE"}}></Icon>
+             <Text style={{marginLeft:15,fontSize:22,fontWeight:"bold",color:"#EEEEEE"}}>Pronunciation:</Text>
+             <Text style={{marginLeft:15,fontSize:20,color:"#CCF2F4",fontFamily:"FredokaOne-Regular"}}>{details[0].pronunciation}</Text>
+             </View>
+             <View style={{display: "flex",flexDirection: "row",justifyContent:"center",marginTop:165}}>
+                <Button  rounded style={{backgroundColor:"#80ED99",paddingHorizontal:25,marginRight:15}} onPress={addToDictionary} >
+                        <Text style={{color:"#012443"}}>Save</Text>
+                </Button>
+                <Button  rounded style={{backgroundColor:buttonMode[darkMode],paddingHorizontal:25}} onPress={ToggleMode} >
+                        {darkMode===1?(
+                            <View style={{display: "flex",flexDirection:"row",}}>
+                            <Icon active name="light-down" type="Entypo" style={{color:"#012443",fontSize:20}}></Icon>
+                            <Text style={{color:"#012443"}}>LightMode</Text> 
+                            </View>):(
+                                
+                                <View style={{display: "flex",flexDirection:"row",}}>
+                                <Icon style={{color:"#EEEEEE",fontSize:20}} active name="ios-moon" type="Ionicons" ></Icon>
+                                <Text style={{color:"#EEEEEE"}}>DarkMode</Text>
+                                </View>
+                            )
+                            
+                        }
+                </Button>
+            </View> 
+
+             <View style={styles.bottomView}>
+                  <Button rounded style={{marginRight:10,backgroundColor:"#035397",paddingHorizontal:15}} onPress={()=> navigation.navigate('Store')}>
+                       <Text>My Dictionary</Text>
+                  </Button>
+                  <Button rounded style={{marginRight:10,backgroundColor:"#5EDFFF",paddingHorizontal:15}} onPress={newWord}>
+                        <Text style={{color:"#394867"}}>New Word</Text>
+                  </Button>
+                  
+             </View>
+            
+
+    
+         </ScrollView>
+         </View>
+    
+            )}
+         
+         
+         
+         
+         </View>
+
+         )
+    
 }
 export default Home;
 
@@ -200,6 +298,7 @@ const styles = StyleSheet.create({
 
         backgroundColor:"#ECFCFF",
         flex:1,
+        
     
         
 
